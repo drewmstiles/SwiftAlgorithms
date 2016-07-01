@@ -2,46 +2,7 @@
 
 import UIKit
 
-var A = [5, 2, 4, 6, 1, 3]
 
-/*
- * CLRS 2.1-2
- */
-
-func insertionSortNonIncreasing(var array: [Int]) -> [Int] {
-    for j in 1..<array.count {
-        let key = array[j]
-        var i = j - 1
-        while i > -1 && array[i] < key {
-            array[i + 1] = array[i]
-            i = i - 1
-        }
-        array[i + 1] = key
-    }
-    return array
-}
-
-
-insertionSortNonIncreasing(A)
-
-
-
-/*
- * CLRS 2.1-3
- */
-
-func linearSearch(array: [Int], value: Int) -> Int?{
-    for i in 0..<array.count {
-        if array[i] == value {
-            return i
-        }
-    }
-    return nil
-}
-
-linearSearch(A, value: 3)
-
-linearSearch(A, value: 7)
 
 
 
