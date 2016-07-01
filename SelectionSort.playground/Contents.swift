@@ -1,12 +1,8 @@
-//: Playground - noun: a place where people can play
-
-import UIKit
+/*
+ * Selection Sort
+ */
 
 var A = [3, 6, 2, 1, 9, 7]
-
-/*
- * CLRS 2.2-2
- */
 
 func selectionSort(arg: [Int]) -> [Int] {
     var array = arg
