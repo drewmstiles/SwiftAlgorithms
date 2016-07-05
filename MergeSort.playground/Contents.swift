@@ -47,6 +47,22 @@ func merge(inout A: [Int], p: Int, q: Int, r: Int) {
     }
 }
 
+func insertionSort(inout a: [Int], begin: Int, end: Int) {
+    let count = end - begin
+    if count == 0 {
+        return
+    } else {
+        insertionSort(&a, begin: begin + 1, end: end)
+        let key = a[count - 1]
+        var i = count - 2
+        while i > -1 && key < a[i] {
+            a[i + 1] = a[i]
+            i -= 1
+        }
+        a[i + 1] = key
+    }
+}
+
 
 func mergeSort(inout A: [Int], p: Int, r: Int) {
     if p < r {
@@ -57,6 +73,24 @@ func mergeSort(inout A: [Int], p: Int, r: Int) {
     }
 }
 
+func mixedSort(inout A: [Int], p: Int, r: Int, k: Int) {
+    if p >= r {
+        return
+    }
+    else if r - p < k {
+        insertionSort(&A, begin: p, end: r)
+    }
+    else {
+        let q = (p + r) / 2
+        mixedSort(&A, p: p, r: q, k: k)
+        mixedSort(&A, p: q + 1, r: r, k: k)
+        merge(&A, p: p, q: q, r: r)
+    }
+}
+
 
 mergeSort(&A, p: 0, r: A.count - 1)
+
+mixedSort(&A, p: 0, r: A.count - 1, k: 3)
+
 
