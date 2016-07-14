@@ -68,71 +68,66 @@ binaryPeakFind(A, begin: 0, end: A.count - 1)
 let M = [
     [11,12,13,14],
     [18,17,16,15],
-    [19,27,28,29],
+    [19,20,21,22],
     [26,25,24,23]
 ]
 
 
 func greedyAscentPeakFind(matrix: [[Int]], row: Int, col: Int) -> (Int, Int) {
    
-    var isPeakRelativeToTop = false
-    var isPeakRelativeToLeft = false
-    var isPeakRelativeToBottom = false
-    var isPeakRelativeToRight = false
+    let element = (row, col)
+    let largestNeighbor = getLargestNeighbor(matrix, row: element.0, col: element.1)
+    
+    if (matrix[element.0][element.1] >= matrix[largestNeighbor.0][largestNeighbor.1]) {
+        return element
+    }
+    else {
+        return greedyAscentPeakFind(matrix, row: largestNeighbor.0, col: largestNeighbor.1)
+    }
+}
+
+func getLargestNeighbor(matrix: [[Int]], row: Int, col: Int) -> (Int, Int) {
     
     let indexOfBottom = row + 1
     let indexOfTop = row - 1
     let indexOfRight = col + 1
     let indexOfLeft = col - 1
     
-    // Check top.
-    if (row == 0) {
-        isPeakRelativeToTop = true
-    }
-    else {
-        isPeakRelativeToTop = matrix[row][col] >= matrix[indexOfTop][col]
+    var topNeigbor = Int.min
+    var rightNeigbor = Int.min
+    var bottomNeigbor = Int.min
+    var leftNeigbor = Int.min
+    
+    // Assigning values of neighbors.
+    if row != 0 {
+        topNeigbor = matrix[indexOfTop][col]
     }
     
-    // Check right.
-    if (col == matrix[0].count - 1) {
-        isPeakRelativeToRight = true
+    if col != matrix[0].count - 1 {
+        rightNeigbor = matrix[row][indexOfRight]
     }
-    else {
-        isPeakRelativeToRight = matrix[row][col] >= matrix[row][indexOfRight]
-    }
-    
-    // Check bottom.
-    if (row == matrix.count - 1) {
-        isPeakRelativeToBottom = true
-    }
-    else {
-        isPeakRelativeToBottom = matrix[row][col] >= matrix[indexOfBottom][col]
+
+    if row != matrix.count - 1 {
+        bottomNeigbor = matrix[indexOfBottom][col]
     }
     
-    // Check left.
-    if (col == 0) {
-        isPeakRelativeToLeft = true
+    if col != 0 {
+        leftNeigbor = matrix[row][indexOfLeft]
     }
-    else {
-        isPeakRelativeToLeft = matrix[row][col] >= matrix[row][indexOfLeft]
-    }
+
+    // Ordering the neighbors by value.
+    var neighbors = [
+        (indexOfTop, col, topNeigbor),
+        (row, indexOfRight, rightNeigbor),
+        (indexOfBottom, col, bottomNeigbor),
+        (row, indexOfLeft, leftNeigbor)
+    ]
     
-    if (!isPeakRelativeToTop) {
-        return greedyAscentPeakFind(matrix, row: indexOfTop, col: col)
-    }
-    else if !isPeakRelativeToRight {
-        return greedyAscentPeakFind(matrix, row: row, col: indexOfRight)
-    }
-    else if !isPeakRelativeToBottom {
-        return greedyAscentPeakFind(matrix, row: indexOfBottom, col: col)
-    }
-    else if !isPeakRelativeToLeft {
-        return greedyAscentPeakFind(matrix, row: row, col: indexOfLeft)
-    }
-    else {
-        return (row, col)
-    }
+    neighbors = neighbors.sort { $0.2 > $1.2 }
+
+    return (neighbors[0].0, neighbors[0].1)
 }
+
 
 greedyAscentPeakFind(M, row: 0, col: 0)
 
