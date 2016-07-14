@@ -67,147 +67,73 @@ binaryPeakFind(A, begin: 0, end: A.count - 1)
 
 let M = [
     [11,12,13,14],
-    [14,13,17,28],
-    [15,29,11,17],
-    [16,17,19,20]
+    [18,17,16,15],
+    [19,27,28,29],
+    [26,25,24,23]
 ]
 
 
 func greedyAscentPeakFind(matrix: [[Int]], row: Int, col: Int) -> (Int, Int) {
    
-    let maxRowInColumn = findLocalMaxRowInColumn(matrix, row: row, col: col)
-    let maxColumnInRow = findLocalMaxColumnInRow(matrix, row: row, col: col)
+    var isPeakRelativeToTop = false
+    var isPeakRelativeToLeft = false
+    var isPeakRelativeToBottom = false
+    var isPeakRelativeToRight = false
     
-    if maxColumnInRow == col && maxRowInColumn == row {
+    let indexOfBottom = row + 1
+    let indexOfTop = row - 1
+    let indexOfRight = col + 1
+    let indexOfLeft = col - 1
+    
+    // Check top.
+    if (row == 0) {
+        isPeakRelativeToTop = true
+    }
+    else {
+        isPeakRelativeToTop = matrix[row][col] >= matrix[indexOfTop][col]
+    }
+    
+    // Check right.
+    if (col == matrix[0].count - 1) {
+        isPeakRelativeToRight = true
+    }
+    else {
+        isPeakRelativeToRight = matrix[row][col] >= matrix[row][indexOfRight]
+    }
+    
+    // Check bottom.
+    if (row == matrix.count - 1) {
+        isPeakRelativeToBottom = true
+    }
+    else {
+        isPeakRelativeToBottom = matrix[row][col] >= matrix[indexOfBottom][col]
+    }
+    
+    // Check left.
+    if (col == 0) {
+        isPeakRelativeToLeft = true
+    }
+    else {
+        isPeakRelativeToLeft = matrix[row][col] >= matrix[row][indexOfLeft]
+    }
+    
+    if (!isPeakRelativeToTop) {
+        return greedyAscentPeakFind(matrix, row: indexOfTop, col: col)
+    }
+    else if !isPeakRelativeToRight {
+        return greedyAscentPeakFind(matrix, row: row, col: indexOfRight)
+    }
+    else if !isPeakRelativeToBottom {
+        return greedyAscentPeakFind(matrix, row: indexOfBottom, col: col)
+    }
+    else if !isPeakRelativeToLeft {
+        return greedyAscentPeakFind(matrix, row: row, col: indexOfLeft)
+    }
+    else {
         return (row, col)
     }
-    else {
-       return greedyAscentPeakFind(matrix, row: maxRowInColumn, col: maxColumnInRow)
-    }
 }
 
-func findLocalMaxColumnInRow(matrix: [[Int]], row: Int, col: Int ) -> Int {
-    let begin = 0
-    let end = matrix[row].count - 1
-    
-    if col == begin {
-        if matrix[row][begin] >= matrix[row][begin + 1] {
-            return begin
-        }
-        else {
-            for c in 1..<(end - 1) {
-                if matrix[row][c] >= matrix[row][c + 1] {
-                    return c
-                }
-            }
-            
-            // Loop fall through means largest row was last.
-            return end
-        }
-    }
-    else if col == end {
-        if matrix[row][end] >= matrix[row][end - 1] {
-            return end
-        }
-        else {
-            for c in (1..<(end - 1)).reverse() {
-                if matrix[row][c] >= matrix[row ][c - 1] {
-                    return c
-                }
-            }
-            
-            // Loop fall through means largest row was first.
-            return begin
-        }
-    }
-    else {
-        if matrix[row][col] < matrix[row][col + 1] {
-            for c in col..<(end - 1) {
-                if matrix[row][c] >= matrix[row][c + 1] {
-                    return c
-                }
-            }
-            
-            // Loop fall through means largest row was last.
-            return end
-        }
-        else if matrix[row][col] < matrix[row][col - 1] {
-            for c in (1..<(col - 1)).reverse() {
-                if matrix[row][c] >= matrix[row][c - 1] {
-                    return c
-                }
-            }
-            
-            // Loop fall through means largest row was first.
-            return begin
-        }
-        else {
-            return col
-        }
-    }
-}
-
-func findLocalMaxRowInColumn(matrix: [[Int]], row: Int, col: Int ) -> Int {
-    let begin = 0
-    let end = matrix.count - 1
-    
-    if row == begin {
-        if matrix[begin][col] >= matrix[begin + 1][col] {
-            return begin
-        }
-        else {
-            for r in 1..<(end - 1) {
-                if matrix[r][col] >= matrix[r + 1][col] {
-                    return r
-                }
-            }
-            
-            // Loop fall through means largest row was last.
-            return end
-        }
-    }
-    else if row == end {
-        if matrix[end][col] >= matrix[end - 1][col] {
-            return end
-        }
-        else {
-            for r in (1..<(end - 1)).reverse() {
-                if matrix[r][col] >= matrix[r - 1][col] {
-                    return r
-                }
-            }
-            
-            // Loop fall through means largest row was first.
-            return begin
-        }
-    }
-    else {
-        if matrix[row][col] < matrix[row + 1][col] {
-            for r in row..<(end - 1) {
-                if matrix[r][col] >= matrix[r + 1][col] {
-                    return r
-                }
-            }
-            
-            // Loop fall through means largest row was last.
-            return end
-        }
-        else if matrix[row][col] < matrix[row - 1][col] {
-            for r in (1..<(row)).reverse() {
-                if matrix[r][col] >= matrix[r - 1][col] {
-                    return r
-                }
-            }
-            
-            // Loop fall through means largest row was first.
-            return begin
-        }
-        else {
-            return row
-        }
-    }
-}
-
-greedyAscentPeakFind(M, row: M.count/2, col: M[0].count/2)
+greedyAscentPeakFind(M, row: 0, col: 0)
 
 
